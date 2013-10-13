@@ -282,13 +282,13 @@ namespace deft_xmltv_grab
             //DateTime last = s.lastgrab.TimeOfDay;
             if (committedsettings.lastgrab.Date == now.Date)
             {
-                /*Tomorrow*/
+                /*Last grab was today, next grab is tomorrow*/
                 delay = (24*60*60*1000) - (now.TimeOfDay.TotalMilliseconds - committedsettings.autograbtime.TimeOfDay.TotalMilliseconds);
             }
             else
             {
                 /*Today*/
-                if (committedsettings.autograbtime <= now)
+                if (committedsettings.autograbtime.TimeOfDay.TotalMilliseconds <= now.TimeOfDay.TotalMilliseconds)
                 {
                     /* Right away! */
                     delay = 0;

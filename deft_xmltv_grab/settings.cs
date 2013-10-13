@@ -97,7 +97,7 @@ namespace deft_xmltv_grab
 
         private SettingsData _sd;
         private AppData _ad;
-        private bool _committed;
+        private bool _committed = false;
 
         public event SettingsChangedHandler SettingsChanged;
         public event AppDataChangedHandler AppDataChanged;
