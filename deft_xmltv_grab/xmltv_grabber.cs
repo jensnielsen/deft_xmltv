@@ -7,14 +7,17 @@ using System.IO;
 
 namespace deft_xmltv_grab
 {
-    class xmltv_grabber
+    class xmltv_grabber : grabber
     {
         public const string grabber_id = "tv_grab_se_tvzon";
         public const string rooturl = "http://xmltv.tvzon.se/xmltv/channels.xml.gz";
         /* http://tv.swedb.se/xmltv/channels.xml.gz */
-        public string xmltvpath;
 
-        public void setchannels(List<channelentry> l)
+        public xmltv_grabber(settings s) : base(s)
+        {
+        }
+
+        public override void setchannels(List<channelentry> l)
         {
             List<string> cfg = new List<string>();
             StreamReader sr;
@@ -59,7 +62,7 @@ namespace deft_xmltv_grab
             sw.Close();
         }
 
-        public List<channelentry> getchannels()
+        public override List<channelentry> getchannels()
         {
             XmlTextReader reader;
             bool dynamicchannels = true;
@@ -171,7 +174,7 @@ namespace deft_xmltv_grab
             return false;
         }
 
-        public bool grab(SettingsData s)
+        protected override bool grab(SettingsData s)
         {
             //string xmltvpath = s.xmltvpath;
             //string cmd = xmltvpath + "xmltv.exe";

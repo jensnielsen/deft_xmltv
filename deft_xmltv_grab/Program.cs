@@ -17,7 +17,7 @@ namespace deft_xmltv_grab
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             settings s = new settings();
-            grabber g = new grabber(s);
+            grabber g = new xmltv_grabber(s);
             deft_xmltv_gui gui = new deft_xmltv_gui(g, s);
             if (File.Exists(s.xmltvpath + "xmltv.exe"))
             {

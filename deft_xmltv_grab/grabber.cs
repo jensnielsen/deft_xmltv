@@ -42,17 +42,16 @@ namespace deft_xmltv_grab
         }
     }
 
-    public class grabber
+    public abstract class grabber
     {
         private System.Timers.Timer nextgrab = null;
 
         private settings committedsettings;
 
-        private xmltv_grabber my_grabber;
+        public string xmltvpath;
 
         public grabber(settings _s)
         {
-            my_grabber = new xmltv_grabber();
             committedsettings = _s;
             committedsettings.SettingsChanged += new SettingsChangedHandler(settingsChanged);
             nextgrab = new System.Timers.Timer();
@@ -158,7 +157,7 @@ namespace deft_xmltv_grab
         public void work(SettingsData s)
         {
             log.notice("Grabbing...");
-            if (my_grabber.grab(s))
+            if (grab(s))
             {
                 domerge(s);
 
@@ -317,7 +316,7 @@ namespace deft_xmltv_grab
         private void settingsChanged(/*SettingsData s*/)
         {
             log.notice("Whoa, grabber got settings");
-            my_grabber.xmltvpath = committedsettings.xmltvpath;
+            xmltvpath = committedsettings.xmltvpath;
 
             if (committedsettings.autograb)
                 enableAutoGrab();
@@ -325,14 +324,9 @@ namespace deft_xmltv_grab
                 disableAutoGrab();
         }
 
-        public void setchannels(List<channelentry> l)
-        {
-            my_grabber.setchannels(l);
-        }
+        public abstract void setchannels(List<channelentry> l);
+        public abstract List<channelentry> getchannels();
+        protected abstract bool grab(SettingsData s);
 
-        public List<channelentry> getchannels()
-        {
-            return my_grabber.getchannels();
-        }
     }
 }
