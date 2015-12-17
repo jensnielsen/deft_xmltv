@@ -154,7 +154,21 @@ namespace deft_xmltv_grab
         }
 
 
-        public void work(SettingsData s)
+        public bool work(SettingsData s)
+        {
+            try
+            {
+                doWork(committedsettings.sd);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                log.error("Failed grabbing, caught " + ex);
+            }
+            return false;
+        }
+
+        private void doWork( SettingsData s )
         {
             log.notice("Grabbing...");
             if (grab(s))
@@ -170,28 +184,14 @@ namespace deft_xmltv_grab
                 {
                     /* Copy completed file to destination */
                     log.notice("Copying finished file (" + s.xmltvpath + "tvguide.xml" + ") to destination " + s.outputfile);
-                    try
-                    {
-                        File.Copy(s.xmltvpath + "tvguide.xml", s.outputfile, true);
-                    }
-                    catch
-                    {
-                        log.error("Failed copy!");
-                    }
+                    File.Copy(s.xmltvpath + "tvguide.xml", s.outputfile, true);
                 }
 
                 if(s.copyftr && !s.ftrguidepath.Equals(s.xmltvpath + "tvguide.xml", StringComparison.CurrentCultureIgnoreCase))
                 {
                     /* Copy completed file to FTR */
                     log.notice("Copying finished file (" + s.xmltvpath + "tvguide.xml" + ") to For The Record (" + s.ftrguidepath + ")");
-                    try
-                    {
-                        File.Copy(s.xmltvpath + "tvguide.xml", s.ftrguidepath, true);
-                    }
-                    catch
-                    {
-                        log.error("Failed copy!");
-                    }
+                    File.Copy(s.xmltvpath + "tvguide.xml", s.ftrguidepath, true);
                 }
 
                 committedsettings.lastgrab = DateTime.Now.ToLocalTime();
@@ -218,6 +218,7 @@ namespace deft_xmltv_grab
                 foreach (string file in files)
                 {
                     log.debug("encoding " + file);
+
                     XDocument xd = XDocument.Load(file);
                     XDeclaration declaration = xd.Declaration;
                     if (declaration != null)
@@ -309,8 +310,15 @@ namespace deft_xmltv_grab
 
         private void nextgrab_Tick(object sender, EventArgs e)
         {
-            this.work(committedsettings.sd);
-            setNextGrab(getDelayToNextGrab());
+            if ( work(committedsettings.sd) )
+            {
+                setNextGrab(getDelayToNextGrab());
+            }
+            else
+            {
+                //log.error( "Caught " + ex );
+                setNextGrab( 5 * 60 * 1000 );
+            }
         }
 
         private void settingsChanged(/*SettingsData s*/)
