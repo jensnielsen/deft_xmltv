@@ -10,7 +10,7 @@ namespace deft_xmltv_grab
     class xmltv_grabber : grabber
     {
         public const string grabber_id = "tv_grab_se_tvzon";
-        public const string rooturl = "http://xmltv.tvzon.se/xmltv/channels.xml.gz";
+        public const string rooturl = "http://xmltv.xmltv.se/channels.xml.gz";
         /* http://tv.swedb.se/xmltv/channels.xml.gz */
 
         public xmltv_grabber(settings s) : base(s)
